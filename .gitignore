@@ -1,0 +1,30 @@
+# Python/cache artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local environments
+.venv/
+venv/
+env/
+.env
+.DS_Store
+
+# Downloaded datasets and local training artifacts
+data/external/
+data/raw_midi/
+models/
+
+# Generated demos and derived corpora
+generated/
+data/tokenized/sangeet_sargam.txt
+data/tokenized/sangeet_sargam_vocab.json
+data/sargam/sangeet_sargam.txt
+
+# Keep small hand-authored seed corpora trackable.
+!data/tokenized/seed_motifs.txt
+!data/tokenized/seed_sargam.txt
+!data/tokenized/seed_sargam_vocab.json
+!data/sargam/seed_sargam.txt

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Indian Music Tutor</title>
+    <link rel="stylesheet" href="indian_tutor.css">
+  </head>
+  <body>
+    <main class="shell">
+      <aside class="sidebar">
+        <div class="mark">SA</div>
+        <nav class="nav" aria-label="Views">
+          <a class="nav-item active" href="indian_tutor.html" title="Tutor" aria-label="Tutor">T</a>
+          <a class="nav-item" href="index.html" title="MotifLab" aria-label="MotifLab">M</a>
+        </nav>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Model-backed sargam studio</p>
+            <h1>Indian Music Tutor</h1>
+          </div>
+          <div class="status-strip">
+            <span id="deviceBadge">Local</span>
+            <span id="statusBadge">Ready</span>
+          </div>
+        </header>
+
+        <section class="grid">
+          <form class="panel controls" id="generateForm">
+            <div class="panel-title">
+              <h2>Generator</h2>
+              <span id="scoreBadge">Score --</span>
+            </div>
+
+            <div class="field-row">
+              <label class="field">
+                <span>Raga</span>
+                <select id="ragaInput">
+                  <option value="BHAIRAV">Bhairav</option>
+                  <option value="TODI">Todi</option>
+                  <option value="POORVI">Poorvi</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Tala</span>
+                <select id="talaInput">
+                  <option value="TRITAAL">Tritaal</option>
+                  <option value="EKTAAL">Ektaal</option>
+                  <option value="JHAAPTAAL">Jhaaptaal</option>
+                  <option value="CHOUTAAL">Choutaal</option>
+                  <option value="DHAMAAR">Dhamaar</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="field-row">
+              <label class="field">
+                <span>Sa</span>
+                <select id="saInput">
+                  <option value="C4">C4</option>
+                  <option value="D4">D4</option>
+                  <option value="E4">E4</option>
+                  <option value="F4">F4</option>
+                  <option value="G4">G4</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Tempo</span>
+                <input id="tempoInput" type="number" min="54" max="144" value="84">
+              </label>
+            </div>
+
+            <label class="slider-field">
+              <span>Temperature <output id="temperatureValue">0.55</output></span>
+              <input id="temperatureInput" type="range" min="0.25" max="1" step="0.01" value="0.55">
+            </label>
+
+            <label class="slider-field">
+              <span>Length <output id="lengthValue">140</output></span>
+              <input id="lengthInput" type="range" min="60" max="260" step="10" value="140">
+            </label>
+
+            <label class="toggle-row">
+              <input id="repairInput" type="checkbox" checked>
+              <span>Raga repair</span>
+            </label>
+
+            <button class="primary-button" id="generateButton" type="submit">Generate</button>
+          </form>
+
+          <section class="panel listen-panel">
+            <div class="panel-title">
+              <h2>Listening</h2>
+              <span id="ragaBadge">Bhairav</span>
+            </div>
+            <audio id="audioPlayer" controls preload="none"></audio>
+            <div class="metrics">
+              <article>
+                <span>Valid</span>
+                <strong id="validMetric">--</strong>
+              </article>
+              <article>
+                <span>Notes</span>
+                <strong id="notesMetric">--</strong>
+              </article>
+              <article>
+                <span>Swaras</span>
+                <strong id="swarasMetric">--</strong>
+              </article>
+              <article>
+                <span>Seconds</span>
+                <strong id="secondsMetric">--</strong>
+              </article>
+            </div>
+            <div class="swara-board" id="swaraBoard"></div>
+          </section>
+
+          <section class="panel lesson-panel">
+            <div class="panel-title">
+              <h2>Lesson</h2>
+              <a id="midiLink" href="#" aria-disabled="true">MIDI</a>
+            </div>
+            <pre id="lessonOutput">Generate a phrase to see practice cells and raga notes.</pre>
+          </section>
+
+          <section class="panel token-panel">
+            <div class="panel-title">
+              <h2>Tokens</h2>
+              <span id="tokenCount">0</span>
+            </div>
+            <pre id="tokenOutput"></pre>
+          </section>
+        </section>
+      </section>
+    </main>
+    <script src="indian_tutor.js"></script>
+  </body>
+</html>

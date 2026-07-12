@@ -1,0 +1,16 @@
+# Original teaching phrases for smoke-testing the Indian music pipeline.
+# Format: RAGA=<name> TALA=<name> TEMPO=<bpm> [LAYA=<speed>] :: swara:duration ...
+# Sargam is relative to Sa. Use M^ for tivra Ma; lowercase r/g/d/n for komal swaras.
+
+RAGA=YAMAN TALA=TEENTAL TEMPO=84 LAYA=MADHYA :: S:1 R:1 G:1 M^:1 | P:1 D:1 N:1 S':2 N:1 D:1 | P:2 M^:1 G:1 R:1 S:3
+RAGA=YAMAN TALA=TEENTAL TEMPO=78 LAYA=VILAMBIT :: N.:1 R:1 G:2 M^:1 G:1 | R:1 S:2 R:1 G:1 M^:1 | P:2 D:1 N:1 S':4
+RAGA=BHAIRAV TALA=TEENTAL TEMPO=72 LAYA=VILAMBIT :: S:1 r:2 G:1 M:2 | P:1 d:2 N:1 S':2 | N:1 d:2 P:1 M:1 G:1 r:1 S:2
+RAGA=BHAIRAV TALA=KEHERWA TEMPO=92 LAYA=MADHYA :: S:1 r:1 G:2 M:1 | P:1 d:1 N:1 S':1 | S':1 N:1 d:1 P:1 M:1 G:1 r:1 S:1
+RAGA=BHUPALI TALA=KEHERWA TEMPO=96 LAYA=MADHYA :: S:1 R:1 G:1 P:1 | D:1 P:1 G:1 R:1 | S:2 R:1 G:1 P:2 D:2
+RAGA=BHUPALI TALA=DADRA TEMPO=88 LAYA=MADHYA :: G:1 P:1 D:1 | S':2 D:1 | P:1 G:1 R:1 | S:3
+RAGA=KAFI TALA=DADRA TEMPO=90 LAYA=MADHYA :: S:1 R:1 g:1 | M:1 P:1 D:1 | n:1 D:1 P:1 | M:1 g:1 R:1 S:2
+RAGA=KAFI TALA=KEHERWA TEMPO=104 LAYA=DRUT :: S:1 g:1 M:1 P:1 | D:1 n:1 D:1 P:1 | M:1 g:1 R:1 S:1 R:1 g:1 M:2
+RAGA=KALYANI TALA=ADI TEMPO=82 LAYA=MADHYA :: S:1 R:1 G:1 M^:1 | P:1 D:1 N:1 S':1 | S':1 N:1 D:1 P:1 M^:1 G:1 R:1 S:1
+RAGA=MAYAMALAVAGOWLA TALA=ADI TEMPO=76 LAYA=MADHYA :: S:1 r:1 G:1 M:1 | P:1 d:1 N:1 S':1 | S':1 N:1 d:1 P:1 M:1 G:1 r:1 S:1
+RAGA=DURGA TALA=KEHERWA TEMPO=90 LAYA=MADHYA :: S:1 R:1 M:1 P:1 | D:1 P:1 M:1 R:1 | S:2 R:1 M:1 P:1 D:1 P:2
+RAGA=BILAWAL TALA=TEENTAL TEMPO=100 LAYA=MADHYA :: S:1 R:1 G:1 M:1 | P:1 D:1 N:1 S':1 | S':1 N:1 D:1 P:1 M:1 G:1 R:1 S:1

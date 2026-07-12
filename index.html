@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MotifLab Agents</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="rail" aria-label="Project navigation">
+        <div class="brand-mark">ML</div>
+        <button class="rail-button active" title="Studio" aria-label="Studio">
+          <span class="icon-grid"></span>
+        </button>
+        <button class="rail-button" title="Lineage" aria-label="Lineage">
+          <span class="icon-branch"></span>
+        </button>
+        <button class="rail-button" title="Library" aria-label="Library">
+          <span class="icon-stack"></span>
+        </button>
+        <button class="rail-button" title="Export" aria-label="Export">
+          <span class="icon-arrow"></span>
+        </button>
+      </aside>
+
+      <section class="workspace">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Agentic music research studio</p>
+            <h1>MotifLab Agents</h1>
+          </div>
+          <div class="transport">
+            <button id="generateBtn" class="primary-button">Generate</button>
+            <button id="playBtn" class="icon-button wide" aria-label="Play current motif" title="Play">
+              <span class="play-glyph"></span>
+              <span>Play</span>
+            </button>
+            <button id="stopBtn" class="icon-button" aria-label="Stop playback" title="Stop">
+              <span class="stop-glyph"></span>
+            </button>
+          </div>
+        </header>
+
+        <section class="studio-grid">
+          <form class="panel compose-panel" id="controlForm">
+            <div class="panel-heading">
+              <h2>Composer</h2>
+              <span id="seedBadge">Seed 4821</span>
+            </div>
+
+            <label class="field full">
+              <span>Creative brief</span>
+              <textarea id="briefInput" rows="4">A curious morning motif that starts simple, learns a new color, and ends unresolved.</textarea>
+            </label>
+
+            <div class="field-row">
+              <label class="field">
+                <span>Mode</span>
+                <select id="modeSelect">
+                  <option value="major">Ionian major</option>
+                  <option value="minor">Natural minor</option>
+                  <option value="dorian">Dorian</option>
+                  <option value="kalyani">Kalyani</option>
+                  <option value="mayamalavagowla">Mayamalavagowla</option>
+                  <option value="bhairav">Bhairav</option>
+                </select>
+              </label>
+
+              <label class="field">
+                <span>Agent goal</span>
+                <select id="goalSelect">
+                  <option value="learnable">Learnable motif</option>
+                  <option value="novel">High novelty</option>
+                  <option value="cinematic">Cinematic arc</option>
+                  <option value="groove">Rhythmic groove</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="field-row">
+              <label class="field">
+                <span>BPM</span>
+                <input id="bpmInput" type="number" min="52" max="168" value="92">
+              </label>
+              <label class="field">
+                <span>Bars</span>
+                <input id="barsInput" type="number" min="2" max="8" value="4">
+              </label>
+            </div>
+
+            <div class="slider-field">
+              <div>
+                <span>Temperature</span>
+                <output id="temperatureValue">0.72</output>
+              </div>
+              <input id="temperatureInput" type="range" min="0" max="1" step="0.01" value="0.72">
+            </div>
+
+            <div class="slider-field">
+              <div>
+                <span>Novelty pressure</span>
+                <output id="noveltyValue">68</output>
+              </div>
+              <input id="noveltyInput" type="range" min="0" max="100" step="1" value="68">
+            </div>
+
+            <fieldset class="agent-switches">
+              <legend>Agents</legend>
+              <label><input id="tutorToggle" type="checkbox" checked> Tutor</label>
+              <label><input id="criticToggle" type="checkbox" checked> Critic</label>
+              <label><input id="mutationToggle" type="checkbox" checked> Mutation</label>
+            </fieldset>
+          </form>
+
+          <section class="panel visual-panel">
+            <div class="panel-heading">
+              <h2>Motif Canvas</h2>
+              <div class="meter">
+                <span>Originality</span>
+                <strong id="originalityScore">82</strong>
+              </div>
+            </div>
+            <canvas id="pianoRoll" width="980" height="420" aria-label="Generated motif piano roll"></canvas>
+            <div class="token-strip" id="tokenStrip"></div>
+          </section>
+
+          <section class="panel agent-panel">
+            <div class="panel-heading">
+              <h2>Agent Board</h2>
+              <span id="statusBadge">Ready</span>
+            </div>
+            <div class="agent-board" id="agentBoard"></div>
+          </section>
+
+          <section class="panel lineage-panel">
+            <div class="panel-heading">
+              <h2>Lineage</h2>
+              <button id="mutateBtn" class="secondary-button">Mutate</button>
+            </div>
+            <div class="lineage" id="lineageList"></div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
+
