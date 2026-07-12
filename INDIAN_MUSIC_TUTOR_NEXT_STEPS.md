@@ -168,10 +168,16 @@ The generated files, downloaded datasets, and trained checkpoints are ignored by
 
 ## Run The Local Tutor UI
 
+After cloning, install dependencies:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
 Start the model-backed local server:
 
 ```bash
-conda run -n spyder-env python src/sargam_server.py \
+python3 src/sargam_server.py \
   --checkpoint models/sangeet_sargam_llm.pt \
   --host 127.0.0.1 \
   --port 8765
@@ -188,15 +194,14 @@ under `generated/`.
 
 ## GitHub Notes
 
-The current `.gitignore` keeps models out of normal Git commits. If you want to
-share a trained checkpoint, prefer one of these:
+The small `models/sangeet_sargam_llm.pt` demo checkpoint is allowed in Git so a
+new user can launch the UI after cloning. For larger future checkpoints, prefer:
 
 - GitHub Release asset
 - Git LFS for `models/*.pt`
 - Hugging Face model repo
 
-For small experiments, committing a tiny checkpoint is technically possible, but
-large binary model files make normal Git history clunky.
+Large binary model files make normal Git history clunky.
 
 ## Research Next Steps
 

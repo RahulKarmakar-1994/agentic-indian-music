@@ -15,7 +15,9 @@ env/
 # Downloaded datasets and local training artifacts
 data/external/
 data/raw_midi/
-models/
+models/*
+!models/sangeet_sargam_llm.pt
+!models/sangeet_sargam_llm.vocab.json
 
 # Generated demos and derived corpora
 generated/

@@ -20,16 +20,22 @@ tokens conditioned on raga, tala, laya, and tempo.
 
 ## Local Tutor UI
 
-Train or place a checkpoint at:
+The repo includes a small demo checkpoint:
 
 ```text
 models/sangeet_sargam_llm.pt
 ```
 
-Then run:
+Install dependencies:
 
 ```bash
-conda run -n spyder-env python src/sargam_server.py \
+python3 -m pip install -r requirements.txt
+```
+
+Then run the local UI server:
+
+```bash
+python3 src/sargam_server.py \
   --checkpoint models/sangeet_sargam_llm.pt \
   --host 127.0.0.1 \
   --port 8765
@@ -58,14 +64,15 @@ Then convert/tokenize/train using the commands in
 
 ## Model Notes
 
-The trained checkpoints are ignored by default:
+The small SANGEET demo checkpoint is committed so the UI works after cloning.
+Larger future checkpoints should stay out of normal Git:
 
 ```text
-models/
+models/*.pt
 ```
 
-For sharing checkpoints, prefer GitHub Releases, Git LFS, or a model registry.
-Keeping binary checkpoints in normal Git is possible, but it makes repository
+For sharing larger checkpoints, prefer GitHub Releases, Git LFS, or a model
+registry. Keeping large binary checkpoints in normal Git makes repository
 history bulky.
 
 ## Status
