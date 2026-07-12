@@ -18,6 +18,7 @@ except ImportError as exc:
 try:
     from .explain_sargam import explain_sargam_tokens
     from .generate_sargam import generate_tokens, load_model
+    from .ollama_tutor import DEFAULT_OLLAMA_MODEL, DEFAULT_OLLAMA_URL, ollama_chat
     from .render_sargam_audio import render_tokens_to_wav
     from .sargam_tokens import RAGA_DEFINITIONS, TALA_MATRAS, sequence_metadata, tokens_to_midi_notes
     from .simple_midi import write_midi
@@ -25,6 +26,7 @@ try:
 except ImportError:
     from explain_sargam import explain_sargam_tokens
     from generate_sargam import generate_tokens, load_model
+    from ollama_tutor import DEFAULT_OLLAMA_MODEL, DEFAULT_OLLAMA_URL, ollama_chat
     from render_sargam_audio import render_tokens_to_wav
     from sargam_tokens import RAGA_DEFINITIONS, TALA_MATRAS, sequence_metadata, tokens_to_midi_notes
     from simple_midi import write_midi
@@ -73,6 +75,7 @@ class TutorHandler(SimpleHTTPRequestHandler):
                 "talas": sorted(TALA_MATRAS),
                 "checkpoint": str(self.state.checkpoint.relative_to(ROOT)),
                 "device": self.state.device,
+                "ollama_default_model": DEFAULT_OLLAMA_MODEL,
             })
             return
         super().do_GET()
@@ -100,6 +103,9 @@ class TutorHandler(SimpleHTTPRequestHandler):
         top_k = int(payload.get("top_k", 10))
         repair = bool(payload.get("repair", True))
         constrain = bool(payload.get("constrain", True))
+        use_ollama = bool(payload.get("use_ollama", False))
+        ollama_model = str(payload.get("ollama_model", DEFAULT_OLLAMA_MODEL))
+        ollama_url = str(payload.get("ollama_url", DEFAULT_OLLAMA_URL))
 
         tokens = generate_tokens(
             self.state.model,
@@ -115,6 +121,13 @@ class TutorHandler(SimpleHTTPRequestHandler):
         )
         validation = validate_sargam_tokens(tokens)
         lesson = explain_sargam_tokens(tokens)
+        tutor_chat = ""
+        tutor_error = ""
+        if use_ollama:
+            try:
+                tutor_chat = ollama_chat(lesson, model=ollama_model, base_url=ollama_url)
+            except RuntimeError as exc:
+                tutor_error = str(exc)
         stamp = int(time.time() * 1000)
         base = ROOT / "generated" / f"ui_{safe_name(raga)}_{stamp}"
         tokens_path = base.with_suffix(".tokens")
@@ -136,6 +149,8 @@ class TutorHandler(SimpleHTTPRequestHandler):
             "metadata": metadata,
             "validation": validation,
             "lesson": lesson,
+            "tutor_chat": tutor_chat,
+            "tutor_error": tutor_error,
             "audio": audio,
             "files": {
                 "tokens": "/" + str(tokens_path.relative_to(ROOT)),

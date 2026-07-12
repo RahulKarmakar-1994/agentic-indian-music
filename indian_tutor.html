@@ -93,6 +93,16 @@
               <span>Constrained decoding</span>
             </label>
 
+            <label class="toggle-row">
+              <input id="ollamaInput" type="checkbox">
+              <span>Ollama tutor</span>
+            </label>
+
+            <label class="field">
+              <span>Ollama model</span>
+              <input id="ollamaModelInput" type="text" value="llama3.2:1b">
+            </label>
+
             <button class="primary-button" id="generateButton" type="submit">Generate</button>
           </form>
 
@@ -129,6 +139,14 @@
               <a id="midiLink" href="#" aria-disabled="true">MIDI</a>
             </div>
             <pre id="lessonOutput">Generate a phrase to see practice cells and raga notes.</pre>
+          </section>
+
+          <section class="panel lesson-panel">
+            <div class="panel-title">
+              <h2>Tutor Chat</h2>
+              <span id="ollamaBadge">Optional</span>
+            </div>
+            <pre id="chatOutput">Enable Ollama tutor to rewrite the lesson as conversational guidance.</pre>
           </section>
 
           <section class="panel token-panel">

@@ -275,3 +275,32 @@ while repair can remain as a safety fallback.
 3. Add user-uploaded teacher exercises in the same sargam format.
 4. Add a better sound engine using SoundFont or a sampler.
 5. Add export buttons for MIDI, WAV, lesson notes, and token data.
+
+## Optional Ollama Tutor Layer
+
+Ollama can be used as a local LLM layer for conversational explanations. It does
+not replace the sargam model; it only rewrites/explains the generated lesson.
+
+Install Ollama:
+
+```text
+https://ollama.com
+```
+
+Pull a small local model:
+
+```bash
+ollama pull llama3.2:1b
+```
+
+Run Ollama if needed:
+
+```bash
+ollama serve
+```
+
+Then start this repo's UI server and enable **Ollama tutor** in the browser.
+
+Important: the local Ollama API still needs a model downloaded on the machine.
+To avoid large downloads, start with `llama3.2:1b` or another small model from
+the Ollama library.

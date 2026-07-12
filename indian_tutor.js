@@ -11,6 +11,8 @@ const secondsMetric = document.querySelector("#secondsMetric");
 const swaraBoard = document.querySelector("#swaraBoard");
 const audioPlayer = document.querySelector("#audioPlayer");
 const lessonOutput = document.querySelector("#lessonOutput");
+const chatOutput = document.querySelector("#chatOutput");
+const ollamaBadge = document.querySelector("#ollamaBadge");
 const tokenOutput = document.querySelector("#tokenOutput");
 const tokenCount = document.querySelector("#tokenCount");
 const midiLink = document.querySelector("#midiLink");
@@ -48,7 +50,9 @@ function payloadFromForm() {
     max_new_tokens: Number(lengthInput.value),
     top_k: 10,
     repair: document.querySelector("#repairInput").checked,
-    constrain: document.querySelector("#constrainInput").checked
+    constrain: document.querySelector("#constrainInput").checked,
+    use_ollama: document.querySelector("#ollamaInput").checked,
+    ollama_model: document.querySelector("#ollamaModelInput").value.trim() || "llama3.2:1b"
   };
 }
 
@@ -70,6 +74,16 @@ function renderResult(result) {
   swarasMetric.textContent = validation.unique_swaras;
   secondsMetric.textContent = audio.seconds;
   lessonOutput.textContent = result.lesson;
+  if (result.tutor_chat) {
+    chatOutput.textContent = result.tutor_chat;
+    ollamaBadge.textContent = "Ollama";
+  } else if (result.tutor_error) {
+    chatOutput.textContent = result.tutor_error;
+    ollamaBadge.textContent = "Fallback";
+  } else {
+    chatOutput.textContent = "Enable Ollama tutor to rewrite the lesson as conversational guidance.";
+    ollamaBadge.textContent = "Optional";
+  }
   tokenOutput.textContent = result.tokens.join(" ");
   tokenCount.textContent = result.tokens.length;
   audioPlayer.src = result.files.wav;
@@ -108,6 +122,7 @@ async function loadOptions() {
     if (!response.ok) return;
     const options = await response.json();
     deviceBadge.textContent = options.device || "Local";
+    document.querySelector("#ollamaModelInput").value = options.ollama_default_model || "llama3.2:1b";
   } catch (error) {
     deviceBadge.textContent = "Local";
   }

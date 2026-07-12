@@ -47,6 +47,33 @@ Open:
 http://127.0.0.1:8765/indian_tutor.html
 ```
 
+## Optional Ollama Tutor
+
+The UI can optionally call a local Ollama model to rewrite the rule-based lesson
+as conversational guidance. This is optional; generation and playback work
+without Ollama.
+
+Install Ollama from:
+
+```text
+https://ollama.com
+```
+
+Pull a small model:
+
+```bash
+ollama pull llama3.2:1b
+```
+
+Start Ollama if it is not already running:
+
+```bash
+ollama serve
+```
+
+Then enable **Ollama tutor** in the UI. Ollama's local API still requires a model
+to be downloaded locally; use a small model first instead of a large one.
+
 ## Data
 
 The repo includes small hand-written seed examples. Larger downloaded datasets
