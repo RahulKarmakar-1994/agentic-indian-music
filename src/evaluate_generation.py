@@ -89,6 +89,7 @@ def difficulty_score(tokens: list[str]) -> float:
 def row_for_tokens(
     tokens: list[str],
     raw_tokens: list[str],
+    constrained_tokens: list[str],
     raga: str,
     tala: str,
     temperature: float,
@@ -97,8 +98,11 @@ def row_for_tokens(
 ) -> dict[str, object]:
     validation = validate_sargam_tokens(tokens)
     raw_validation = validate_sargam_tokens(raw_tokens)
+    constrained_validation = validate_sargam_tokens(constrained_tokens)
     swaras = swara_sequence(tokens)
+    constrained_swaras = swara_sequence(constrained_tokens)
     nearest = nearest_similarity(swaras, profiles, raga)
+    constrained_nearest = nearest_similarity(constrained_swaras, profiles, raga)
     return {
         "raga": raga,
         "tala": tala,
@@ -106,6 +110,9 @@ def row_for_tokens(
         "sample": sample_index,
         "raw_valid": raw_validation["valid"],
         "raw_score": raw_validation["score"],
+        "constrained_valid": constrained_validation["valid"],
+        "constrained_score": constrained_validation["score"],
+        "constrained_novelty": round(1.0 - constrained_nearest, 4),
         "valid": validation["valid"],
         "score": validation["score"],
         "notes": validation["notes"],
@@ -152,6 +159,7 @@ def write_summary(rows: list[dict[str, object]], path: str | Path) -> None:
         "## Overall",
         "",
         f"Raw validity: {statistics.mean(1.0 if row['raw_valid'] else 0.0 for row in rows):.3f}",
+        f"Constrained validity: {statistics.mean(1.0 if row['constrained_valid'] else 0.0 for row in rows):.3f}",
         f"Repaired validity: {statistics.mean(1.0 if row['valid'] else 0.0 for row in rows):.3f}",
         f"Mean novelty: {statistics.mean(float(row['novelty']) for row in rows):.3f}",
         f"Mean repetition: {statistics.mean(float(row['repetition_rate']) for row in rows):.3f}",
@@ -198,15 +206,18 @@ def write_plots(rows: list[dict[str, object]], output_dir: str | Path) -> None:
 
     ragas = sorted({str(row["raga"]) for row in rows})
     raw_validity = []
+    constrained_validity = []
     repaired_validity = []
     for raga in ragas:
         subset = [row for row in rows if row["raga"] == raga]
         raw_validity.append(statistics.mean(1.0 if row["raw_valid"] else 0.0 for row in subset))
+        constrained_validity.append(statistics.mean(1.0 if row["constrained_valid"] else 0.0 for row in subset))
         repaired_validity.append(statistics.mean(1.0 if row["valid"] else 0.0 for row in subset))
     x = range(len(ragas))
     plt.figure(figsize=(7, 4))
-    plt.bar([item - 0.18 for item in x], raw_validity, width=0.36, label="raw")
-    plt.bar([item + 0.18 for item in x], repaired_validity, width=0.36, label="repaired")
+    plt.bar([item - 0.24 for item in x], raw_validity, width=0.24, label="raw")
+    plt.bar(list(x), constrained_validity, width=0.24, label="constrained")
+    plt.bar([item + 0.24 for item in x], repaired_validity, width=0.24, label="repaired")
     plt.xticks(list(x), ragas)
     plt.ylim(0, 1.05)
     plt.ylabel("validity rate")
@@ -254,8 +265,21 @@ def main() -> None:
                     repair=False,
                     device=device,
                 )
+                torch.manual_seed(args.seed + sample_index + int(temperature * 1000) + len(rows))
+                constrained_tokens = generate_tokens(
+                    model,
+                    stoi,
+                    itos,
+                    prompt,
+                    max_new_tokens=args.max_new_tokens,
+                    temperature=temperature,
+                    top_k=args.top_k,
+                    repair=False,
+                    constrain_raga=True,
+                    device=device,
+                )
                 repaired_tokens = repair_raga(raw_tokens)
-                rows.append(row_for_tokens(repaired_tokens, raw_tokens, raga, args.tala, temperature, sample_index, profiles))
+                rows.append(row_for_tokens(repaired_tokens, raw_tokens, constrained_tokens, raga, args.tala, temperature, sample_index, profiles))
 
     write_csv(rows, args.csv_out)
     write_summary(rows, args.summary_out)

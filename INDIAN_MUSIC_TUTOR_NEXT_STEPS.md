@@ -155,6 +155,7 @@ Generate with raga repair:
 conda run -n spyder-env python src/generate_sargam.py \
   --checkpoint models/sangeet_sargam_llm.pt \
   --prompt "BOS RAGA_BHAIRAV TALA_TRITAAL LAYA_MADHYA TEMPO_84 BAR" \
+  --constrain-raga \
   --repair-raga \
   --sa C4 \
   --tokens-out generated/sangeet_bhairav_repaired.tokens \
@@ -165,6 +166,10 @@ conda run -n spyder-env python src/generate_sargam.py \
 
 The generated files, downloaded datasets, and trained checkpoints are ignored by
 `.gitignore` so GitHub can stay focused on source code, seed examples, and docs.
+
+`--constrain-raga` changes decoding only; it does not require retraining or a
+new checkpoint. It masks out `SWARA_*` tokens that are not allowed in the chosen
+raga before sampling.
 
 ## Run The Local Tutor UI
 
@@ -242,6 +247,16 @@ First local result from 96 samples:
 
 This suggests the next research priority is constrained decoding and better
 balanced phrase-level training data.
+
+After adding constrained decoding, a small 24-sample check showed:
+
+- Raw validity: 0.583
+- Constrained validity: 1.000
+- Repaired validity: 1.000
+- Constrained novelty stayed close to repaired novelty.
+
+This means constrained decoding is a better product default than repair alone,
+while repair can remain as a safety fallback.
 
 ## Product Next Steps
 

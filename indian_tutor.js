@@ -47,7 +47,8 @@ function payloadFromForm() {
     temperature: Number(temperatureInput.value),
     max_new_tokens: Number(lengthInput.value),
     top_k: 10,
-    repair: document.querySelector("#repairInput").checked
+    repair: document.querySelector("#repairInput").checked,
+    constrain: document.querySelector("#constrainInput").checked
   };
 }
 

@@ -99,6 +99,7 @@ class TutorHandler(SimpleHTTPRequestHandler):
         temperature = float(payload.get("temperature", 0.55))
         top_k = int(payload.get("top_k", 10))
         repair = bool(payload.get("repair", True))
+        constrain = bool(payload.get("constrain", True))
 
         tokens = generate_tokens(
             self.state.model,
@@ -109,6 +110,7 @@ class TutorHandler(SimpleHTTPRequestHandler):
             temperature=temperature,
             top_k=top_k,
             repair=repair,
+            constrain_raga=constrain,
             device=self.state.device,
         )
         validation = validate_sargam_tokens(tokens)

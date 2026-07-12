@@ -61,6 +61,50 @@ def repair_raga(tokens: list[str]) -> list[str]:
     return repaired
 
 
+def raga_from_prompt(prompt: str) -> str:
+    for token in prompt.split():
+        if token.startswith("RAGA_"):
+            return token.removeprefix("RAGA_")
+    return "UNKNOWN"
+
+
+def invalid_swara_ids(stoi: dict[str, int], raga: str) -> list[int]:
+    definition = RAGA_DEFINITIONS.get(raga)
+    if not definition:
+        return []
+    allowed = set(definition["allowed"])
+    invalid = []
+    for token, token_id in stoi.items():
+        if token.startswith("SWARA_") and token.removeprefix("SWARA_") not in allowed:
+            invalid.append(token_id)
+    return invalid
+
+
+@torch.no_grad()
+def sample_tokens(
+    model: MusicLanguageModel,
+    idx: torch.Tensor,
+    max_new_tokens: int,
+    temperature: float,
+    top_k: int | None,
+    masked_token_ids: list[int] | None = None,
+) -> torch.Tensor:
+    masked_token_ids = masked_token_ids or []
+    for _ in range(max_new_tokens):
+        idx_cond = idx[:, -model.config.block_size :]
+        logits, _ = model(idx_cond)
+        logits = logits[:, -1, :] / max(0.05, temperature)
+        if masked_token_ids:
+            logits[:, masked_token_ids] = -float("inf")
+        if top_k is not None:
+            values, _ = torch.topk(logits, min(top_k, logits.shape[-1]))
+            logits[logits < values[:, [-1]]] = -float("inf")
+        probs = torch.softmax(logits, dim=-1)
+        idx_next = torch.multinomial(probs, num_samples=1)
+        idx = torch.cat((idx, idx_next), dim=1)
+    return idx
+
+
 def generate_tokens(
     model: MusicLanguageModel,
     stoi: dict[str, int],
@@ -70,6 +114,7 @@ def generate_tokens(
     temperature: float = 0.75,
     top_k: int | None = 18,
     repair: bool = False,
+    constrain_raga: bool = False,
     device: str = "cpu",
 ) -> list[str]:
     prompt_tokens = prompt.split()
@@ -78,7 +123,8 @@ def generate_tokens(
         raise ValueError(f"Prompt contains tokens missing from vocabulary: {missing}")
 
     idx = torch.tensor([[stoi[token] for token in prompt_tokens]], dtype=torch.long, device=device)
-    generated = model.generate(idx, max_new_tokens, temperature, top_k)[0].tolist()
+    masked_token_ids = invalid_swara_ids(stoi, raga_from_prompt(prompt)) if constrain_raga else []
+    generated = sample_tokens(model, idx, max_new_tokens, temperature, top_k, masked_token_ids)[0].tolist()
     tokens = [itos[index] for index in generated]
     if "EOS" in tokens:
         tokens = tokens[: tokens.index("EOS") + 1]
@@ -97,6 +143,7 @@ def main() -> None:
     parser.add_argument("--temperature", type=float, default=0.75)
     parser.add_argument("--top-k", type=int, default=18)
     parser.add_argument("--sa", default="C4")
+    parser.add_argument("--constrain-raga", action="store_true", help="Block out-of-raga SWARA tokens during sampling")
     parser.add_argument("--repair-raga", action="store_true", help="Map out-of-raga swaras to nearest allowed swara before rendering")
     parser.add_argument("--tokens-out", default="generated/generated_sargam.tokens")
     parser.add_argument("--midi-out", default="generated/generated_sargam.mid")
@@ -116,6 +163,7 @@ def main() -> None:
             temperature=args.temperature,
             top_k=args.top_k,
             repair=args.repair_raga,
+            constrain_raga=args.constrain_raga,
             device=device,
         )
     except ValueError as exc:
