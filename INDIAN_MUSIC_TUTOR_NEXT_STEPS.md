@@ -215,6 +215,34 @@ Large binary model files make normal Git history clunky.
 5. Preserve ornament/kan/meend information from SANGEET XML instead of flattening
    it to equal-matra notes.
 
+## Run A Generation Evaluation
+
+Use this to generate many samples and study validity, novelty, repetition, and
+difficulty across ragas and temperatures:
+
+```bash
+python3 src/evaluate_generation.py \
+  --checkpoint models/sangeet_sargam_llm.pt \
+  --training-source data/sargam/sangeet_sargam.txt \
+  --ragas BHAIRAV TODI POORVI \
+  --temperatures 0.35 0.55 0.75 0.95 \
+  --samples 8 \
+  --max-new-tokens 110 \
+  --csv-out generated/eval/generation_metrics.csv \
+  --summary-out generated/eval/summary.md \
+  --plot-dir generated/eval/plots
+```
+
+First local result from 96 samples:
+
+- Raw raga validity was much lower for Bhairav than Todi/Poorvi.
+- Raga repair lifted validity to 100%, but this is a post-processing fix.
+- Higher temperature increased novelty at 0.95, while raw validity decreased.
+- Repetition decreased as temperature increased.
+
+This suggests the next research priority is constrained decoding and better
+balanced phrase-level training data.
+
 ## Product Next Steps
 
 1. Make the tutor UI support saved sessions and generated phrase history.
