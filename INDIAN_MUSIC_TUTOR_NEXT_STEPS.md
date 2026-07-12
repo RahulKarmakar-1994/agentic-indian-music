@@ -197,6 +197,16 @@ http://127.0.0.1:8765/indian_tutor.html
 The UI calls `/api/generate`, creates tokens, MIDI, WAV audio, and a lesson file
 under `generated/`.
 
+The WAV renderer includes a light Sa/Pa drone by default. For renderer ablation
+or plain melody output:
+
+```bash
+python3 src/render_sargam_audio.py generated/demo.tokens \
+  --output generated/demo_no_drone.wav \
+  --sa C4 \
+  --no-drone
+```
+
 ## GitHub Notes
 
 The small `models/sangeet_sargam_llm.pt` demo checkpoint is allowed in Git so a

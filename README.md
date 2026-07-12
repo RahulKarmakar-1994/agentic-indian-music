@@ -78,8 +78,10 @@ history bulky.
 ## Status
 
 This is a research/prototype repo, not a polished product yet. The current
-audio renderer is a simple dependency-free synth for listening tests. Product
-quality audio should later use SoundFont rendering or a sampler.
+audio renderer is a dependency-free synth for listening tests. It includes a
+light Sa/Pa drone by default so generated phrases feel more like practice
+material. Product-quality audio should later use SoundFont rendering or a
+sampler.
 
 ## Next Steps
 
